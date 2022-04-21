@@ -1,12 +1,13 @@
 const Auth = require("../models/auth");
 const bcrypt = require("bcrypt");
 const { sendEmail } = require("../utils/email");
+const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
   try {
     const checkUser = await Auth.findOne({ email: req.body.email });
     if (checkUser) {
-      if (checkUser.emailVerification === "true") {
+      if (checkUser.emailVerification) {
         console.log(checkUser);
         return res.status(200).json({
           errors: [{ message: "User already registred" }],
@@ -100,12 +101,18 @@ exports.login = async (req, res) => {
     const result = await Auth.findOne({ email: req.body.email });
     if (result) {
       const validate = await bcrypt.compare(req.body.password, result.password);
-      if(validate){
-
-      }else{
+      if (validate) {
+        const { password, ...others } = result._doc;
+        const token = jwt.sign(
+          { uid: result._id.toHexString() },
+          process.env.JWT_SECRET,
+          { expiresIn: "30d" }
+        );
+        return res.status(200).json({ useData: others, token: token });
+      } else {
         return res
-        .status(401)
-        .json({ errors: [{ message: "Invalid Credentials" }] });
+          .status(401)
+          .json({ errors: [{ message: "Invalid Credentials" }] });
       }
     } else {
       return res
