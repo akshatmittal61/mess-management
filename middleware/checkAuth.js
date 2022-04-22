@@ -35,3 +35,17 @@ exports.isAdmin = async (req, res, next) => {
     return res.status(400).json({ msg: "Invalid Admin" });
   }
 };
+
+exports.isUser = async (req, res, next) => {
+  const result =await Auth.findOne({ _id: req.user });
+  console.log(result);
+  if (result) {
+    if (result.role === "user") {
+      next();
+    } else {
+      res.status(403).json({ msg: "Unauthorized!" });
+    }
+  } else {
+    return res.status(400).json({ msg: "Invalid Admin" });
+  }
+};
