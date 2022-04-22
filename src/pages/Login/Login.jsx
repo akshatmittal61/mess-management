@@ -1,19 +1,14 @@
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import { Link } from "react-router-dom";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import LockIcon from "@mui/icons-material/Lock";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
+import { Avatar, Button, CssBaseline, IconButton } from "@mui/material";
+import { TextField, Grid, Box, Typography, Container } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ArrowBack, Lock } from "@mui/icons-material";
+import { Link, useNavigate } from "react-router-dom";
 
 const theme = createTheme();
 
 export default function SignIn() {
+	const navigate = useNavigate();
 	const [user, setUser] = React.useState({
 		email: "",
 		password: "",
@@ -35,7 +30,16 @@ export default function SignIn() {
 	};
 	return (
 		<ThemeProvider theme={theme}>
-			<Container component="header"></Container>
+			<Container
+				component="header"
+				sx={{
+					margin: "2rem 0",
+				}}
+			>
+				<IconButton size="large" onClick={() => navigate(-1)}>
+					<ArrowBack />
+				</IconButton>
+			</Container>
 			<Container component="main" maxWidth="xs">
 				<CssBaseline />
 				<Box
@@ -47,7 +51,7 @@ export default function SignIn() {
 					}}
 				>
 					<Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-						<LockIcon />
+						<Lock />
 					</Avatar>
 					<Typography component="h1" variant="h5">
 						Sign in
