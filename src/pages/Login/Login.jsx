@@ -4,11 +4,14 @@ import { TextField, Grid, Box, Typography, Container } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { ArrowBack, Lock } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
+import GlobalContext from "../../Context/GlobalContext";
 
 const theme = createTheme();
 
-export default function SignIn() {
+export default function Login() {
 	const navigate = useNavigate();
+	const { isAuthenticated, setIsAuthenticated } =
+		React.useContext(GlobalContext);
 	const [user, setUser] = React.useState({
 		email: "",
 		password: "",
@@ -27,7 +30,14 @@ export default function SignIn() {
 			email: "",
 			password: "",
 		});
+		setIsAuthenticated(true);
 	};
+	React.useEffect(() => {
+		if (isAuthenticated) {
+			navigate("/dashboard");
+		}
+	}, [isAuthenticated, navigate]);
+
 	return (
 		<ThemeProvider theme={theme}>
 			<Container
