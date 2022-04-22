@@ -4,14 +4,32 @@ import { Menu, Container, Avatar } from "@mui/material";
 import { Button, Tooltip, MenuItem } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import favicon from "../../images/favicon.png";
-
-const pages = ["Dashboard", "Account"];
-const settings = ["Account", "Logout"];
+import GlobalContext from "../../Context/GlobalContext";
+import { Link } from "react-router-dom";
 
 const Header = () => {
 	const [anchorElNav, setAnchorElNav] = React.useState(null);
 	const [anchorElUser, setAnchorElUser] = React.useState(null);
-
+	const pages = [
+		{
+			text: "Dashboard",
+			link: "/dashboard",
+		},
+		{
+			text: "Account",
+			link: "/account",
+		},
+	];
+	const settings = [
+		{
+			text: "Account",
+			link: "/account",
+		},
+		{
+			text: "Logout",
+			link: "/logout",
+		},
+	];
 	const handleOpenNavMenu = (event) => {
 		setAnchorElNav(event.currentTarget);
 	};
@@ -26,7 +44,7 @@ const Header = () => {
 	const handleCloseUserMenu = () => {
 		setAnchorElUser(null);
 	};
-
+	const { user } = React.useContext(GlobalContext);
 	return (
 		<AppBar position="static">
 			<Container maxWidth="xl">
@@ -65,13 +83,13 @@ const Header = () => {
 								display: { xs: "block", md: "none" },
 							}}
 						>
-							{pages.map((page) => (
+							{pages.map((page, index) => (
 								<MenuItem
-									key={page}
+									key={index}
 									onClick={handleCloseNavMenu}
 								>
 									<Typography textAlign="center">
-										{page}
+										<Link to={page.link}>{page.text}</Link>
 									</Typography>
 								</MenuItem>
 							))}
@@ -109,13 +127,13 @@ const Header = () => {
 							display: { xs: "none", md: "flex" },
 						}}
 					>
-						{pages.map((page) => (
+						{pages.map((page, index) => (
 							<Button
-								key={page}
+								key={index}
 								onClick={handleCloseNavMenu}
 								sx={{ my: 2, color: "white", display: "block" }}
 							>
-								{page}
+								<Link to={page.link}>{page.text}</Link>
 							</Button>
 						))}
 					</Box>
@@ -126,10 +144,7 @@ const Header = () => {
 								onClick={handleOpenUserMenu}
 								sx={{ p: 0 }}
 							>
-								<Avatar
-									alt="Remy Sharp"
-									src="/static/images/avatar/2.jpg"
-								/>
+								<Avatar alt={user.name} src={user.avatar} />
 							</IconButton>
 						</Tooltip>
 						<Menu
@@ -148,13 +163,15 @@ const Header = () => {
 							open={Boolean(anchorElUser)}
 							onClose={handleCloseUserMenu}
 						>
-							{settings.map((setting) => (
+							{settings.map((setting, index) => (
 								<MenuItem
-									key={setting}
+									key={index}
 									onClick={handleCloseUserMenu}
 								>
 									<Typography textAlign="center">
-										{setting}
+										<Link to={setting.link}>
+											{setting.text}
+										</Link>
 									</Typography>
 								</MenuItem>
 							))}
