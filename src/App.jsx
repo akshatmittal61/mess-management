@@ -12,7 +12,7 @@ const App = () => {
 	const location = useLocation();
 	return (
 		<>
-			{location.pathname !== "/" && <Header />}
+			{location.pathname !== "/"&&location.pathname !== "/login"&&location.pathname !== "/register" && <Header />}
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/login" element={<Login />} />

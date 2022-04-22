@@ -21,6 +21,7 @@ export default function Register() {
 		lname: "",
 		email: "",
 		password: "",
+		confirmPassword: "",
 	});
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -37,6 +38,7 @@ export default function Register() {
 			lname: "",
 			email: "",
 			password: "",
+			confirmPassword: "",
 		});
 	};
 
@@ -75,31 +77,6 @@ export default function Register() {
 						sx={{ mt: 3 }}
 					>
 						<Grid container spacing={2}>
-							<Grid item xs={12} sm={6}>
-								<TextField
-									autoComplete="given-name"
-									required
-									fullWidth
-									id="fname"
-									label="First Name"
-									name="fname"
-									value={user.fname}
-									onChange={handleChange}
-									autoFocus
-								/>
-							</Grid>
-							<Grid item xs={12} sm={6}>
-								<TextField
-									required
-									fullWidth
-									id="lname"
-									label="Last Name"
-									name="lname"
-									value={user.lname}
-									onChange={handleChange}
-									autoComplete="family-name"
-								/>
-							</Grid>
 							<Grid item xs={12}>
 								<TextField
 									required
@@ -121,6 +98,19 @@ export default function Register() {
 									type="password"
 									id="password"
 									value={user.password}
+									onChange={handleChange}
+									autoComplete="new-password"
+								/>
+							</Grid>
+							<Grid item xs={12}>
+								<TextField
+									required
+									fullWidth
+									name="confirmPassword"
+									label="Confirm Password"
+									type="password"
+									id="confirmPassword"
+									value={user.confirmPassword}
 									onChange={handleChange}
 									autoComplete="new-password"
 								/>
