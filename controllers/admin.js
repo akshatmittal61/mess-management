@@ -79,7 +79,8 @@ exports.singleMessDetails=async(req,res)=>{
   
     return res.status(200).json({errors: [{ details:messResult}]});
   } catch (err) {
-    
+    console.log(err);
+    return res.status(500).json({ errors: [{ message: "server error" }] });
   }
 }
 
@@ -89,6 +90,23 @@ exports.profile=async(req,res)=>{
     const { password, ...others } = result._doc;
     return res.status(200).json({errors: [{ details:others}]});
   } catch (err) {
-    
+    console.log(err);
+    return res.status(500).json({ errors: [{ message: "server error" }] });
+  }
+}
+
+exports.multipleUser=async(req,res)=>{
+  try {
+    for(let x in req.body.users){
+      const newUser=await Auth(x);
+      const result=newUser.save();
+      const {name,...others}=result._doc;
+      const messDetails=await Mess(others);
+      const messResult=messDetails.save();
+      return res.status(200).json({errors: [{ message:"Details saved succesfully"}]});
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ errors: [{ message: "server error" }] });
   }
 }
