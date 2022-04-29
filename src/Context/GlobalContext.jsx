@@ -9,20 +9,7 @@ export const GlobalProvider = ({ children }) => {
 		JSON.parse(isLocalAuthenticated)
 	);
 	const [isLoading, setIsLoading] = useState(false);
-	const [user, setUser] = useState({
-		name: "Akshat Mittal",
-		status: "Developing",
-		email: "akshatmittal2506@gmail.com",
-		phone: 9456849466,
-		username: "akshatmittal61",
-		batch: "2020",
-		bio: "MERN Stack developer",
-		currentOrganization: "MERN",
-		desgination: "MERN Stack Developer",
-		dob: "2002-06-25",
-		gender: "Male",
-		avatar: "https://avatars.githubusercontent.com/u/84612609?v=4",
-	});
+	const [user, setUser] = useState(null);
 	const axiosInstance = axios.create({
 		baseURL: "http://localhost:5000/",
 	});

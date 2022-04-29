@@ -10,34 +10,51 @@ const theme = createTheme();
 
 export default function Login() {
 	const navigate = useNavigate();
-	const { isAuthenticated, setIsAuthenticated } =
+	const { isAuthenticated, setIsAuthenticated, setUser } =
 		React.useContext(GlobalContext);
-	const [user, setUser] = React.useState({
+	const [loginUser, setLoginUser] = React.useState({
 		email: "",
 		password: "",
 	});
 	const handleChange = (e) => {
 		const { name, value } = e.target;
-		setUser({
-			...user,
+		setLoginUser({
+			...loginUser,
 			[name]: value,
 		});
 	};
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		console.log(user);
-		setUser({
+		console.log(loginUser);
+		setLoginUser({
 			email: "",
 			password: "",
 		});
 		setIsAuthenticated(true);
+		const newUser = {
+			name: "Akshat Mittal",
+			status: "Developing",
+			email: "akshatmittal2506@gmail.com",
+			phone: 9456849466,
+			username: "akshatmittal61",
+			batch: "2020",
+			bio: "MERN Stack developer",
+			currentOrganization: "MERN",
+			desgination: "MERN Stack Developer",
+			dob: "2002-06-25",
+			gender: "Male",
+			avatar: "https://avatars.githubusercontent.com/u/84612609?v=4",
+			isAdmin: false,
+		};
+		setUser(newUser);
+		localStorage.setItem("user", JSON.stringify(newUser));
+		localStorage.setItem("isAuthenticated", true);
 	};
 	React.useEffect(() => {
 		if (isAuthenticated) {
 			navigate("/dashboard");
 		}
 	}, [isAuthenticated, navigate]);
-
 	return (
 		<ThemeProvider theme={theme}>
 			<Container
@@ -81,7 +98,7 @@ export default function Login() {
 							type="email"
 							id="email"
 							autoComplete="email"
-							value={user.email}
+							value={loginUser.email}
 							onChange={handleChange}
 							autoFocus
 						/>
@@ -94,7 +111,7 @@ export default function Login() {
 							type="password"
 							id="password"
 							autoComplete="current-password"
-							value={user.password}
+							value={loginUser.password}
 							onChange={handleChange}
 						/>
 						<Button

@@ -8,6 +8,7 @@ import Header from "./components/Header/Header";
 import Register from "./pages/Register/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import PrivateRoute from "./components/PrivateRoute.jsx";
+import Logout from "./components/Logout";
 
 const App = () => {
 	AOS.init();
@@ -26,6 +27,14 @@ const App = () => {
 					element={
 						<PrivateRoute>
 							<Dashboard />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path="/logout"
+					element={
+						<PrivateRoute>
+							<Logout />
 						</PrivateRoute>
 					}
 				/>
