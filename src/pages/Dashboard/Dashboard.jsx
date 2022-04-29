@@ -7,6 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import UserDetails from "../../components/UserDetails/UserDetails";
 
 const columns = [
 	{ id: "roll", label: "Roll No", minWidth: 50, format: (value) => +value },
@@ -96,6 +97,12 @@ export default function Dashboard() {
 		setRowsPerPage(+event.target.value);
 		setPage(0);
 	};
+	const [openDetails, setOpenDetails] = React.useState(false);
+	const [openUser, setOpenUser] = React.useState({});
+	const handleOpenUser = (user) => {
+		setOpenUser(user);
+		setOpenDetails(true);
+	};
 
 	return (
 		<Paper sx={{ width: "95%", overflow: "hidden", margin: "3rem auto" }}>
@@ -127,6 +134,7 @@ export default function Dashboard() {
 										role="checkbox"
 										tabIndex={-1}
 										key={index}
+										onClick={() => handleOpenUser(row)}
 									>
 										{columns.map((column) => {
 											const value = row[column.id];
@@ -157,6 +165,12 @@ export default function Dashboard() {
 				onPageChange={handleChangePage}
 				onRowsPerPageChange={handleChangeRowsPerPage}
 			/>
+			{openDetails && (
+				<UserDetails
+					user={openUser}
+					close={() => setOpenDetails(false)}
+				/>
+			)}
 		</Paper>
 	);
 }

@@ -15,7 +15,7 @@ const Home = () => {
 		>
 			<div className="home-content" data-aos="zoom-in">
 				<div className="home-title">
-					<span>Indian Institue of Information Technology, Una</span>
+					<span>Indian Institute of Information Technology, Una</span>
 				</div>
 				<div className="home-subtitle">
 					<span>Mess Management</span>
