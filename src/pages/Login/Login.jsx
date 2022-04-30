@@ -55,8 +55,6 @@ export default function Login() {
 	};
 	React.useEffect(() => {
 		if (isAuthenticated) {
-			// if (user.isAdmin) navigate("/dashboard");
-			// else navigate(`/user/${user.id}`);
 			navigate("/dashboard");
 		}
 	}, [isAuthenticated, navigate, user]);

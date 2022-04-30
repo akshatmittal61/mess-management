@@ -5,7 +5,7 @@ import { Button, Tooltip, MenuItem } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import favicon from "../../images/favicon.png";
 import GlobalContext from "../../Context/GlobalContext";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
 	const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -45,6 +45,7 @@ const Header = () => {
 		setAnchorElUser(null);
 	};
 	const { user } = React.useContext(GlobalContext);
+	const navigate = useNavigate();
 	return (
 		<AppBar position="static">
 			<Container maxWidth="xl">
@@ -86,10 +87,13 @@ const Header = () => {
 							{pages.map((page, index) => (
 								<MenuItem
 									key={index}
-									onClick={handleCloseNavMenu}
+									onClick={() => {
+										handleCloseNavMenu();
+										navigate(page.link);
+									}}
 								>
 									<Typography textAlign="center">
-										<Link to={page.link}>{page.text}</Link>
+										{page.text}
 									</Typography>
 								</MenuItem>
 							))}
@@ -130,14 +134,16 @@ const Header = () => {
 						{pages.map((page, index) => (
 							<Button
 								key={index}
-								onClick={handleCloseNavMenu}
+								onClick={() => {
+									handleCloseNavMenu();
+									navigate(page.link);
+								}}
 								sx={{ my: 2, color: "white", display: "block" }}
 							>
-								<Link to={page.link}>{page.text}</Link>
+								{page.text}
 							</Button>
 						))}
 					</Box>
-
 					<Box sx={{ flexGrow: 0 }}>
 						<Tooltip title="Open settings">
 							<IconButton
@@ -168,10 +174,13 @@ const Header = () => {
 									key={index}
 									onClick={handleCloseUserMenu}
 								>
-									<Typography textAlign="center">
-										<Link to={setting.link}>
-											{setting.text}
-										</Link>
+									<Typography
+										textAlign="center"
+										onClick={() => navigate(setting.link)}
+									>
+										{/* <Link to={setting.link}> */}
+										{setting.text}
+										{/* </Link> */}
 									</Typography>
 								</MenuItem>
 							))}

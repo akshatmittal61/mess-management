@@ -1,21 +1,3 @@
-/* import { Card, Container } from '@mui/material'
-import React from 'react'
-import { useParams } from 'react-router-dom'
-
-const User = () => {
-	return (
-		<>
-    <Container component='section'>
-        <Card>
-            {id}
-        </Card>
-        </Container>
-    </>
-  )
-}
-
-export default User */
-
 import * as React from "react";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
