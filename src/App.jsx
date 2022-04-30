@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import Home from "./pages/Home/Home";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -9,10 +9,13 @@ import Register from "./pages/Register/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import Logout from "./components/Logout";
+import User from "./pages/User/User";
+import GlobalContext from "./Context/GlobalContext";
 
 const App = () => {
 	AOS.init();
 	const location = useLocation();
+	const { user } = useContext(GlobalContext);
 	return (
 		<>
 			{location.pathname !== "/" &&
@@ -26,10 +29,11 @@ const App = () => {
 					path="/dashboard"
 					element={
 						<PrivateRoute>
-							<Dashboard />
+							{user && (user.isAdmin ? <Dashboard /> : <User />)}
 						</PrivateRoute>
 					}
 				/>
+				{/* <Route path="/user/:id" element={<User />} /> */}
 				<Route
 					path="/logout"
 					element={

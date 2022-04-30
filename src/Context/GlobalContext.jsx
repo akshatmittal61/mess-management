@@ -9,7 +9,9 @@ export const GlobalProvider = ({ children }) => {
 		JSON.parse(isLocalAuthenticated)
 	);
 	const [isLoading, setIsLoading] = useState(false);
-	const [user, setUser] = useState(null);
+	const [user, setUser] = useState(
+		JSON.parse(localStorage.getItem("user")) || null
+	);
 	const axiosInstance = axios.create({
 		baseURL: "http://localhost:5000/",
 	});

@@ -10,7 +10,7 @@ const theme = createTheme();
 
 export default function Login() {
 	const navigate = useNavigate();
-	const { isAuthenticated, setIsAuthenticated, setUser } =
+	const { isAuthenticated, setIsAuthenticated, user, setUser } =
 		React.useContext(GlobalContext);
 	const [loginUser, setLoginUser] = React.useState({
 		email: "",
@@ -44,7 +44,10 @@ export default function Login() {
 			dob: "2002-06-25",
 			gender: "Male",
 			avatar: "https://avatars.githubusercontent.com/u/84612609?v=4",
-			isAdmin: false,
+			isAdmin: !(loginUser.email[0] >= "0" && loginUser.email[0] <= "9"),
+			daily: 140,
+			man: 20,
+			specials: 70,
 		};
 		setUser(newUser);
 		localStorage.setItem("user", JSON.stringify(newUser));
@@ -52,9 +55,11 @@ export default function Login() {
 	};
 	React.useEffect(() => {
 		if (isAuthenticated) {
+			// if (user.isAdmin) navigate("/dashboard");
+			// else navigate(`/user/${user.id}`);
 			navigate("/dashboard");
 		}
-	}, [isAuthenticated, navigate]);
+	}, [isAuthenticated, navigate, user]);
 	return (
 		<ThemeProvider theme={theme}>
 			<Container

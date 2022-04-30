@@ -17,14 +17,17 @@ import {
 	TextField,
 } from "@mui/material";
 import { Box } from "@mui/system";
+import GlobalContext from "../../Context/GlobalContext";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
+let allUserDetails = null;
 
-export default function UserDetails({ user, close }) {
-	const [userDetail, setUserDetail] = React.useState({ ...user });
+export default function UserDetails({ activeUser, close }) {
+	const [userDetail, setUserDetail] = React.useState(null);
 	const [allowEdit, setAllowEdit] = React.useState(false);
+	const { user } = React.useContext(GlobalContext);
 	const handleClose = () => {
 		close();
 	};
@@ -39,9 +42,8 @@ export default function UserDetails({ user, close }) {
 		console.log(userDetail);
 	};
 	React.useEffect(() => {
-		console.log(user);
-	}, [user]);
-
+		allUserDetails = { ...activeUser };
+	}, []);
 	return (
 		<>
 			<Dialog
@@ -88,27 +90,29 @@ export default function UserDetails({ user, close }) {
 					<Box>
 						<Card>
 							<CardContent>
-								<Container
-									component="div"
-									sx={{
-										width: "100%",
-										display: "flex",
-										justifyContent: "flex-end",
-										alignItems: "center",
-									}}
-								>
-									<FormControlLabel
-										control={
-											<Switch
-												onChange={() =>
-													setAllowEdit(!allowEdit)
-												}
-												checked={allowEdit}
-											/>
-										}
-										label="Allow Editing"
-									/>
-								</Container>
+								{user.isAdmin && (
+									<Container
+										component="div"
+										sx={{
+											width: "100%",
+											display: "flex",
+											justifyContent: "flex-end",
+											alignItems: "center",
+										}}
+									>
+										<FormControlLabel
+											control={
+												<Switch
+													onChange={() =>
+														setAllowEdit(!allowEdit)
+													}
+													checked={allowEdit}
+												/>
+											}
+											label="Allow Editing"
+										/>
+									</Container>
+								)}
 								<Typography
 									variant="h5"
 									color="text.secondary"
@@ -200,3 +204,4 @@ export default function UserDetails({ user, close }) {
 		</>
 	);
 }
+export { allUserDetails };
