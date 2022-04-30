@@ -28,8 +28,25 @@ import { Box } from "@mui/system";
 
 export default function User() {
 	const { user } = React.useContext(GlobalContext);
-	console.log(user);
-	const advance = 19270;
+	const [userDetails, setUserDetails] = React.useState({
+		...user,
+		advance: 19270,
+	});
+	React.useEffect(() => {
+		const { daily, man, specials, advance } = userDetails;
+		setUserDetails({
+			...userDetails,
+			balance: daily * man,
+			grand: daily * man + specials,
+			left: advance - (daily * man + specials),
+		});
+		console.log({
+			...userDetails,
+			balance: daily * man,
+			grand: daily * man + specials,
+			left: advance - (daily * man + specials),
+		});
+	}, [user]);
 	return (
 		<Container
 			component="main"
@@ -68,7 +85,7 @@ export default function User() {
 							sx={{ width: "45%", mr: 1, ml: 1 }}
 							type="number"
 							name="advance"
-							value={advance}
+							value={userDetails.advance}
 							id="advance"
 							label="Mess Advance"
 							disabled={true}
@@ -78,7 +95,7 @@ export default function User() {
 							sx={{ width: "45%", mr: 1, ml: 1 }}
 							type="number"
 							name="daily"
-							value={user.daily}
+							value={userDetails.daily}
 							id="daily"
 							label="Daily Charge"
 							disabled={true}
@@ -88,7 +105,7 @@ export default function User() {
 							sx={{ width: "45%", mr: 1, ml: 1 }}
 							type="number"
 							name="man"
-							value={user.man}
+							value={userDetails.man}
 							id="man"
 							label="MAN Day"
 							disabled={true}
@@ -98,9 +115,49 @@ export default function User() {
 							sx={{ width: "45%", mr: 1, ml: 1 }}
 							type="number"
 							name="specials"
-							value={user.specials}
+							value={userDetails.specials}
 							id="specials"
 							label="Specials"
+							disabled={true}
+						/>
+						<TextField
+							margin="normal"
+							sx={{ width: "45%", mr: 1, ml: 1 }}
+							type="number"
+							name="advance"
+							value={userDetails.advance}
+							id="advance"
+							label="Advance"
+							disabled={true}
+						/>
+						<TextField
+							margin="normal"
+							sx={{ width: "45%", mr: 1, ml: 1 }}
+							type="number"
+							name="balance"
+							value={userDetails.balance}
+							id="balance"
+							label="Balance"
+							disabled={true}
+						/>
+						<TextField
+							margin="normal"
+							sx={{ width: "45%", mr: 1, ml: 1 }}
+							type="number"
+							name="grand"
+							value={userDetails.grand}
+							id="grand"
+							label="Grand"
+							disabled={true}
+						/>
+						<TextField
+							margin="normal"
+							sx={{ width: "45%", mr: 1, ml: 1 }}
+							type="number"
+							name="left"
+							value={userDetails.left}
+							id="left"
+							label="Left"
 							disabled={true}
 						/>
 					</Box>

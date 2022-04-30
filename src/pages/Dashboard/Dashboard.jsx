@@ -98,7 +98,7 @@ export default function Dashboard() {
 		setPage(0);
 	};
 	const [openDetails, setOpenDetails] = React.useState(false);
-	const [openUser, setOpenUser] = React.useState({});
+	const [openUser, setOpenUser] = React.useState(null);
 	const handleOpenUser = (user) => {
 		setOpenUser(user);
 		setOpenDetails(true);
@@ -167,7 +167,7 @@ export default function Dashboard() {
 			/>
 			{openDetails && (
 				<UserDetails
-					user={openUser}
+					activeUser={openUser}
 					close={() => setOpenDetails(false)}
 				/>
 			)}

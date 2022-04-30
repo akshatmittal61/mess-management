@@ -22,10 +22,9 @@ import GlobalContext from "../../Context/GlobalContext";
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
-let allUserDetails = null;
 
 export default function UserDetails({ activeUser, close }) {
-	const [userDetail, setUserDetail] = React.useState(null);
+	const [userDetail, setUserDetail] = React.useState({ ...activeUser });
 	const [allowEdit, setAllowEdit] = React.useState(false);
 	const { user } = React.useContext(GlobalContext);
 	const handleClose = () => {
@@ -41,9 +40,7 @@ export default function UserDetails({ activeUser, close }) {
 	const handleSubmit = () => {
 		console.log(userDetail);
 	};
-	React.useEffect(() => {
-		allUserDetails = { ...activeUser };
-	}, []);
+	console.log(activeUser);
 	return (
 		<>
 			<Dialog
@@ -204,4 +201,3 @@ export default function UserDetails({ activeUser, close }) {
 		</>
 	);
 }
-export { allUserDetails };
