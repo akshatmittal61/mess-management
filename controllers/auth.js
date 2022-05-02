@@ -104,13 +104,20 @@ exports.login = async (req, res) => {
     if (result) {
       const validate = await bcrypt.compare(req.body.password, result.password);
       if (validate) {
-        const { password, ...others } = result._doc;
-        const token = jwt.sign(
-          { uid: result._id.toHexString() },
-          process.env.JWT_SECRET,
-          { expiresIn: "30d" }
-        );
-        return res.status(200).json({ useData: others, token: token });
+        if(result.emailVerification){
+          const { password, ...others } = result._doc;
+          const token = jwt.sign(
+            { uid: result._id.toHexString() },
+            process.env.JWT_SECRET,
+            { expiresIn: "30d" }
+          );
+          return res.status(200).json({ useData: others, token: token });
+        }else{
+          return res
+          .status(401)
+          .json({ errors: [{ message: "Verify email" }] });
+        }
+        
       } else {
         return res
           .status(401)
