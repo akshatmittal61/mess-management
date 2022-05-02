@@ -11,14 +11,14 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link, useNavigate } from "react-router-dom";
 import { IconButton } from "@mui/material";
 import { ArrowBack, Lock } from "@mui/icons-material";
+import GlobalContext from "../../Context/GlobalContext";
 
 const theme = createTheme();
 
 export default function Register() {
 	const navigate = useNavigate();
+	const { axiosInstance } = React.useContext(GlobalContext);
 	const [user, setUser] = React.useState({
-		fname: "",
-		lname: "",
 		email: "",
 		password: "",
 		confirmPassword: "",
@@ -30,12 +30,23 @@ export default function Register() {
 			[name]: value,
 		});
 	};
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-		console.log(user);
+		try {
+			const response = await axiosInstance.patch("/api/auth/register", {
+				email: user.email,
+				password: user.password,
+			});
+			const { status } = response;
+			console.log(status);
+			alert("Please verify email");
+		} catch (error) {
+			const { status, data } = error.response;
+			console.log(status);
+			console.log(error.response);
+			alert(data.errors[0].message);
+		}
 		setUser({
-			fname: "",
-			lname: "",
 			email: "",
 			password: "",
 			confirmPassword: "",

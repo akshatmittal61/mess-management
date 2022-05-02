@@ -6,10 +6,11 @@ const jwt = require("jsonwebtoken");
 exports.register = async (req, res) => {
   try {
     const checkUser = await Auth.findOne({ email: req.body.email });
+    console.log(checkUser);
     if (checkUser) {
       if (checkUser.emailVerification) {
         console.log(checkUser);
-        return res.status(200).json({
+        return res.status(409).json({
           errors: [{ message: "User already registred" }],
         });
       } else {
@@ -36,7 +37,7 @@ exports.register = async (req, res) => {
           .json({ errors: [{ message: "Please verify your email" }] });
       }
     } else {
-      return res.status(200).json({
+      return res.status(404).json({
         errors: [{ message: "No record found please contact mess admin" }],
       });
     }
