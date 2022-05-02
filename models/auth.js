@@ -10,7 +10,7 @@ const AuthSchema=new mongoose.Schema({
         unique:true
     },
     emailVerification:{
-        type:String,
+        type:Boolean,
         required:true,
         default:false
     },

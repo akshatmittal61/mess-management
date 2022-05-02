@@ -98,7 +98,9 @@ exports.autoLogin = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
+
     const result = await Auth.findOne({ email: req.body.email });
+    console.log(result);
     if (result) {
       const validate = await bcrypt.compare(req.body.password, result.password);
       if (validate) {
