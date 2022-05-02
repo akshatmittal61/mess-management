@@ -10,8 +10,13 @@ const theme = createTheme();
 
 export default function Login() {
 	const navigate = useNavigate();
-	const { isAuthenticated, setIsAuthenticated, user, setUser } =
-		React.useContext(GlobalContext);
+	const {
+		isAuthenticated,
+		setIsAuthenticated,
+		user,
+		setUser,
+		axiosInstance,
+	} = React.useContext(GlobalContext);
 	const [loginUser, setLoginUser] = React.useState({
 		email: "",
 		password: "",
@@ -23,35 +28,32 @@ export default function Login() {
 			[name]: value,
 		});
 	};
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-		console.log(loginUser);
-		setLoginUser({
-			email: "",
-			password: "",
-		});
-		setIsAuthenticated(true);
-		const newUser = {
-			name: "Akshat Mittal",
-			status: "Developing",
-			email: "akshatmittal2506@gmail.com",
-			phone: 9456849466,
-			username: "akshatmittal61",
-			batch: "2020",
-			bio: "MERN Stack developer",
-			currentOrganization: "MERN",
-			desgination: "MERN Stack Developer",
-			dob: "2002-06-25",
-			gender: "Male",
-			avatar: "https://avatars.githubusercontent.com/u/84612609?v=4",
-			isAdmin: !(loginUser.email[0] >= "0" && loginUser.email[0] <= "9"),
-			daily: 140,
-			man: 20,
-			specials: 70,
-		};
-		setUser(newUser);
-		localStorage.setItem("user", JSON.stringify(newUser));
-		localStorage.setItem("isAuthenticated", true);
+		try {
+			const response = await axiosInstance.post("/api/auth/login", {
+				email: loginUser.email,
+				password: loginUser.password,
+			});
+			const { token, useData } = response.data;
+			console.log(response);
+			localStorage.setItem("token", token);
+			localStorage.setItem("isAuthenticated", true);
+			localStorage.setItem("user", JSON.stringify(useData));
+			setUser({
+				...useData,
+				isAdmin: useData.role === "admin",
+			});
+			setIsAuthenticated(true);
+		} catch (error) {
+			const { status, data } = error.response;
+			console.log(error.response);
+			if (status === 401) {
+				alert(data.errors[0].message);
+			} else if (status === 500) {
+				alert(data.errors[0].message);
+			}
+		}
 	};
 	React.useEffect(() => {
 		if (isAuthenticated) {

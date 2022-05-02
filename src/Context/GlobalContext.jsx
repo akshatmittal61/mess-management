@@ -13,7 +13,7 @@ export const GlobalProvider = ({ children }) => {
 		JSON.parse(localStorage.getItem("user")) || null
 	);
 	const axiosInstance = axios.create({
-		baseURL: "http://localhost:5000/",
+		baseURL: "http://localhost:4000/",
 	});
 	return (
 		<GlobalContext.Provider
