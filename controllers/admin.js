@@ -44,13 +44,14 @@ exports.newMess = async (req, res) => {
 
 exports.editMess = async (req, res) => {
   try {
-    const { email, ...others } = req.body;
+    const { email,name, ...others } = req.body;
     console.log(others);
+    const newName=await Mess.updateOne({email:req.body.email},{name:name});
     const result = await Mess.updateOne(
       { email: req.body.email },
       { $set: others }
     );
-    console.log(result);
+    console.log(result,newName);
     if (result) {
       return res
         .status(200)
