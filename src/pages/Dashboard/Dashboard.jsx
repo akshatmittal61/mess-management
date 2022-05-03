@@ -9,6 +9,7 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import UserDetails from "../../components/UserDetails/UserDetails";
 import GlobalContext from "../../Context/GlobalContext";
+import LinearProgress from "@mui/material/LinearProgress";
 
 const columns = [
 	{ id: "email", label: "Email", minWidth: 50, format: (value) => value },
@@ -79,6 +80,9 @@ const Dashboard = () => {
 	const [page, setPage] = React.useState(0);
 	const [rowsPerPage, setRowsPerPage] = React.useState(10);
 	const [rows, setRows] = React.useState([]);
+	const [openDetails, setOpenDetails] = React.useState(false);
+	const [openUser, setOpenUser] = React.useState(null);
+	const [isLoading, setisLoading] = React.useState(true);
 	const getPersonDetails = async (email, config) => {
 		const personDetails = await axiosInstance.post(
 			"/api/admin/profile",
@@ -89,42 +93,42 @@ const Dashboard = () => {
 		);
 		return personDetails;
 	};
-	React.useEffect(() => {
-		setRows([]);
-		const getAllData = async () => {
-			const config = {
-				headers: {
-					"x-auth-token": localStorage.getItem("token"),
-				},
-			};
-			const response = await axiosInstance.get(
-				"/api/admin/getMessDetails",
-				config
-			);
-			const { details } = response.data.errors[0];
-			details.forEach((person) => {
-				getPersonDetails(person.email, config)
-					.then((res) => {
-						return res.data;
-					})
-					.then((data) => {
-						const personDetails = data.errors[0];
-						setRows([
-							...rows,
-							createData(
-								person.email,
-								personDetails.details.name,
-								person.messAdvance,
-								person.dietPerDay,
-								person.manDay,
-								person.specialLunch
-							),
-						]);
-					});
-			});
+	const getAllData = async () => {
+		const config = {
+			headers: {
+				"x-auth-token": localStorage.getItem("token"),
+			},
 		};
+		const response = await axiosInstance.get(
+			"/api/admin/getMessDetails",
+			config
+		);
+		const { details } = response.data.errors[0];
+		setRows([]);
+		details.forEach((person) => {
+			getPersonDetails(person.email, config)
+				.then((res) => {
+					return res.data;
+				})
+				.then((data) => {
+					const personDetails = data.errors[0];
+					setRows([
+						...rows,
+						createData(
+							person.email,
+							personDetails.details.name,
+							person.messAdvance,
+							person.dietPerDay,
+							person.manDay,
+							person.specialLunch
+						),
+					]);
+				});
+		});
+	};
+	React.useEffect(() => {
 		getAllData();
-	}, []);
+	}, [openDetails]);
 
 	const handleChangePage = (event, newPage) => {
 		setPage(newPage);
@@ -134,15 +138,19 @@ const Dashboard = () => {
 		setRowsPerPage(+event.target.value);
 		setPage(0);
 	};
-	const [openDetails, setOpenDetails] = React.useState(false);
-	const [openUser, setOpenUser] = React.useState(null);
 	const handleOpenUser = (user) => {
 		setOpenUser(user);
 		setOpenDetails(true);
 	};
 
 	return (
-		<Paper sx={{ width: "95%", overflow: "hidden", margin: "3rem auto" }}>
+		<Paper
+			sx={{
+				width: window.innerWidth > 880 ? "95%" : "99%",
+				overflow: "hidden",
+				margin: "3rem auto",
+			}}
+		>
 			<TableContainer sx={{ maxHeight: 440 }}>
 				<Table stickyHeader aria-label="sticky table">
 					<TableHead>
@@ -158,6 +166,7 @@ const Dashboard = () => {
 							))}
 						</TableRow>
 					</TableHead>
+					{isLoading && <LinearProgress />}
 					<TableBody>
 						{rows
 							.slice(

@@ -23,10 +23,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function UserDetails({ activeUser, close }) {
+const UserDetails = ({ activeUser, close }) => {
 	const [userDetail, setUserDetail] = React.useState({ ...activeUser });
 	const [allowEdit, setAllowEdit] = React.useState(false);
-	const { user } = React.useContext(GlobalContext);
+	const { user, axiosInstance } = React.useContext(GlobalContext);
 	const handleClose = () => {
 		close();
 	};
@@ -34,13 +34,29 @@ export default function UserDetails({ activeUser, close }) {
 		const { name, value } = e.target;
 		setUserDetail({
 			...userDetail,
-			[name]: value,
+			[name]: name === "email" || name === "name" ? value : +value,
 		});
 	};
-	const handleSubmit = () => {
+	const handleSubmit = async () => {
 		console.log(userDetail);
+		const config = {
+			headers: {
+				"x-auth-token": localStorage.getItem("token"),
+			},
+			"Content-Type": "application/json",
+		};
+		await axiosInstance.patch(
+			"/api/admin/editmess",
+			{
+				email: userDetail.email,
+				messAdvance: userDetail.advance,
+				dietPerDay: userDetail.daily,
+				manDay: userDetail.man,
+				specialLunch: userDetail.specials,
+			},
+			config
+		);
 	};
-	console.log(activeUser);
 	return (
 		<>
 			<Dialog
@@ -64,7 +80,7 @@ export default function UserDetails({ activeUser, close }) {
 							variant="h6"
 							component="div"
 						>
-							Sound
+							{userDetail.name}
 						</Typography>
 						<Button
 							autoFocus
@@ -127,11 +143,11 @@ export default function UserDetails({ activeUser, close }) {
 								</Typography>
 								<Typography color="text.secondary" gutterBottom>
 									<Box component="form">
-										<Typography>Roll No.: </Typography>
+										<Typography>Email: </Typography>
 										<Input
 											disabled={!allowEdit}
-											name="roll"
-											value={userDetail.roll}
+											name="email"
+											value={userDetail.email}
 											onChange={handleChange}
 										/>
 									</Box>
@@ -200,4 +216,5 @@ export default function UserDetails({ activeUser, close }) {
 			</Dialog>
 		</>
 	);
-}
+};
+export default UserDetails;
