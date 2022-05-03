@@ -10,6 +10,10 @@ import TableRow from "@mui/material/TableRow";
 import UserDetails from "../../components/UserDetails/UserDetails";
 import GlobalContext from "../../Context/GlobalContext";
 import LinearProgress from "@mui/material/LinearProgress";
+import { Box } from "@mui/system";
+import { Fab } from "@mui/material";
+import { Add } from "@mui/icons-material";
+import AddUser from "../AddUser/AddUser";
 
 const columns = [
 	{ id: "email", label: "Email", minWidth: 50, format: (value) => value },
@@ -82,7 +86,8 @@ const Dashboard = () => {
 	const [rows, setRows] = React.useState([]);
 	const [openDetails, setOpenDetails] = React.useState(false);
 	const [openUser, setOpenUser] = React.useState(null);
-	const [isLoading, setisLoading] = React.useState(true);
+	const [openAddUser, setOpenAddUser] = React.useState(false);
+	const [isLoading, setIsLoading] = React.useState(true);
 	const getPersonDetails = async (email, config) => {
 		const personDetails = await axiosInstance.post(
 			"/api/admin/profile",
@@ -94,6 +99,7 @@ const Dashboard = () => {
 		return personDetails;
 	};
 	const getAllData = async () => {
+		setIsLoading(true);
 		const response = await axiosInstance.get("/api/admin/getMessDetails");
 		const { details } = response.data.errors[0];
 		setRows([]);
@@ -117,6 +123,7 @@ const Dashboard = () => {
 					]);
 				});
 		});
+		setIsLoading(false);
 	};
 	React.useEffect(() => {
 		getAllData();
@@ -136,80 +143,98 @@ const Dashboard = () => {
 	};
 
 	return (
-		<Paper
-			sx={{
-				width: window.innerWidth > 880 ? "95%" : "99%",
-				overflow: "hidden",
-				margin: "3rem auto",
-			}}
-		>
-			<TableContainer sx={{ maxHeight: 440 }}>
-				<Table stickyHeader aria-label="sticky table">
-					{isLoading && <LinearProgress />}
-					<TableHead>
-						<TableRow>
-							{columns.map((column) => (
-								<TableCell
-									key={column.id}
-									align={column.align}
-									style={{ minWidth: column.minWidth }}
-								>
-									{column.label}
-								</TableCell>
-							))}
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{rows
-							.slice(
-								page * rowsPerPage,
-								page * rowsPerPage + rowsPerPage
-							)
-							.map((row, index) => {
-								return (
-									<TableRow
-										hover
-										role="checkbox"
-										tabIndex={-1}
-										key={index}
-										onClick={() => handleOpenUser(row)}
+		<>
+			<Paper
+				sx={{
+					width: window.innerWidth > 880 ? "95%" : "99%",
+					overflow: "hidden",
+					margin: "3rem auto",
+				}}
+			>
+				<TableContainer sx={{ maxHeight: 440 }}>
+					{isLoading && (
+						<Box sx={{ width: "100%" }}>
+							<LinearProgress />
+						</Box>
+					)}
+					<Table stickyHeader aria-label="sticky table">
+						<TableHead>
+							<TableRow>
+								{columns.map((column) => (
+									<TableCell
+										key={column.id}
+										align={column.align}
+										style={{ minWidth: column.minWidth }}
 									>
-										{columns.map((column) => {
-											const value = row[column.id];
-											return (
-												<TableCell
-													key={column.id}
-													align={column.align}
-												>
-													{column.format &&
-													typeof value === "number"
-														? column.format(value)
-														: value}
-												</TableCell>
-											);
-										})}
-									</TableRow>
-								);
-							})}
-					</TableBody>
-				</Table>
-			</TableContainer>
-			<TablePagination
-				rowsPerPageOptions={[10, 25, 100]}
-				component="div"
-				count={rows.length}
-				rowsPerPage={rowsPerPage}
-				page={page}
-				onPageChange={handleChangePage}
-				onRowsPerPageChange={handleChangeRowsPerPage}
-			/>
-			{openDetails && (
-				<UserDetails
-					activeUser={openUser}
-					close={() => setOpenDetails(false)}
+										{column.label}
+									</TableCell>
+								))}
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{rows
+								.slice(
+									page * rowsPerPage,
+									page * rowsPerPage + rowsPerPage
+								)
+								.map((row, index) => {
+									return (
+										<TableRow
+											hover
+											role="checkbox"
+											tabIndex={-1}
+											key={index}
+											onClick={() => handleOpenUser(row)}
+										>
+											{columns.map((column) => {
+												const value = row[column.id];
+												return (
+													<TableCell
+														key={column.id}
+														align={column.align}
+													>
+														{column.format &&
+														typeof value ===
+															"number"
+															? column.format(
+																	value
+															  )
+															: value}
+													</TableCell>
+												);
+											})}
+										</TableRow>
+									);
+								})}
+						</TableBody>
+					</Table>
+				</TableContainer>
+				<TablePagination
+					rowsPerPageOptions={[10, 25, 100]}
+					component="div"
+					count={rows.length}
+					rowsPerPage={rowsPerPage}
+					page={page}
+					onPageChange={handleChangePage}
+					onRowsPerPageChange={handleChangeRowsPerPage}
 				/>
-			)}
-		</Paper>
+				{openDetails && (
+					<UserDetails
+						activeUser={openUser}
+						close={() => setOpenDetails(false)}
+					/>
+				)}
+			</Paper>
+			<Fab
+				sx={{ position: "fixed", bottom: "2rem", right: "2rem" }}
+				color="primary"
+				aria-label="add"
+				onClick={() => setOpenAddUser(true)}
+			>
+				<Add />
+			</Fab>
+			{openAddUser && <AddUser close={() => setOpenAddUser(false)} />}
+		</>
 	);
 };
 export default Dashboard;
