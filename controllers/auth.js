@@ -14,27 +14,34 @@ exports.register = async (req, res) => {
           errors: [{ message: "User already registred" }],
         });
       } else {
-        const salt = await bcrypt.genSalt(10);
-        const hasedPass = await bcrypt.hash(req.body.password, salt);
-        req.body.password = hasedPass;
-        const updateUser = await Auth.findOneAndUpdate(
-          { email: req.body.email },
-          { password: hasedPass }
-        );
-        console.log(updateUser);
-        const link = `${process.env.URL}api/auth/verifyemail/${
-          updateUser.email
-        }/${updateUser._id.toHexString()}`;
-        console.log(link);
-        sendEmail(
-          updateUser.email,
-          "verify email",
-          `<h1>verify your email <a href=${link} > click to verify</a></h1>`
-        );
-
-        return res
-          .status(200)
-          .json({ errors: [{ message: "Please verify your email" }] });
+        if(checkUser.password.length()!=0){
+          return res.status(409).json({
+            errors: [{ message: "User already registred" }],
+          });
+        }else{
+          const salt = await bcrypt.genSalt(10);
+          const hasedPass = await bcrypt.hash(req.body.password, salt);
+          req.body.password = hasedPass;
+          const updateUser = await Auth.findOneAndUpdate(
+            { email: req.body.email },
+            { password: hasedPass }
+          );
+          console.log(updateUser);
+          const link = `${process.env.URL}api/auth/verifyemail/${
+            updateUser.email
+          }/${updateUser._id.toHexString()}`;
+          console.log(link);
+          sendEmail(
+            updateUser.email,
+            "verify email",
+            `<h1>verify your email <a href=${link} > click to verify</a></h1>`
+          );
+  
+          return res
+            .status(200)
+            .json({ errors: [{ message: "Please verify your email" }] });
+        }
+       
       }
     } else {
       return res.status(404).json({
