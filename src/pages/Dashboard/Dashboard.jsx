@@ -94,19 +94,11 @@ const Dashboard = () => {
 		return personDetails;
 	};
 	const getAllData = async () => {
-		const config = {
-			headers: {
-				"x-auth-token": localStorage.getItem("token"),
-			},
-		};
-		const response = await axiosInstance.get(
-			"/api/admin/getMessDetails",
-			config
-		);
+		const response = await axiosInstance.get("/api/admin/getMessDetails");
 		const { details } = response.data.errors[0];
 		setRows([]);
 		details.forEach((person) => {
-			getPersonDetails(person.email, config)
+			getPersonDetails(person.email)
 				.then((res) => {
 					return res.data;
 				})
@@ -153,6 +145,7 @@ const Dashboard = () => {
 		>
 			<TableContainer sx={{ maxHeight: 440 }}>
 				<Table stickyHeader aria-label="sticky table">
+					{isLoading && <LinearProgress />}
 					<TableHead>
 						<TableRow>
 							{columns.map((column) => (
@@ -166,7 +159,6 @@ const Dashboard = () => {
 							))}
 						</TableRow>
 					</TableHead>
-					{isLoading && <LinearProgress />}
 					<TableBody>
 						{rows
 							.slice(

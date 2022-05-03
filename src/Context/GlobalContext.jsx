@@ -14,6 +14,10 @@ export const GlobalProvider = ({ children }) => {
 	);
 	const axiosInstance = axios.create({
 		baseURL: "http://localhost:4000/",
+		headers: {
+			"x-auth-token": localStorage.getItem("token"),
+			"Content-Type": "application/json",
+		},
 	});
 	return (
 		<GlobalContext.Provider

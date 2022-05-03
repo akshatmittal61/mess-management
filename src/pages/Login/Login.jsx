@@ -36,7 +36,6 @@ export default function Login() {
 				password: loginUser.password,
 			});
 			const { token, useData } = response.data;
-			console.log(response);
 			localStorage.setItem("token", token);
 			localStorage.setItem("isAuthenticated", true);
 			localStorage.setItem(
@@ -53,7 +52,6 @@ export default function Login() {
 			setIsAuthenticated(true);
 		} catch (error) {
 			const { status, data } = error.response;
-			console.log(error.response);
 			if (status === 401) {
 				alert(data.errors[0].message);
 			} else if (status === 500) {

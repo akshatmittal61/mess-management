@@ -9,6 +9,7 @@ const Logout = () => {
 		setUser(null);
 		localStorage.setItem("isAuthenticated", false);
 		localStorage.setItem("user", null);
+		localStorage.setItem("token", null);
 	}, [setIsAuthenticated, setUser]);
 	return <Navigate to="/login" />;
 };

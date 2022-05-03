@@ -39,23 +39,13 @@ const UserDetails = ({ activeUser, close }) => {
 	};
 	const handleSubmit = async () => {
 		console.log(userDetail);
-		const config = {
-			headers: {
-				"x-auth-token": localStorage.getItem("token"),
-			},
-			"Content-Type": "application/json",
-		};
-		await axiosInstance.patch(
-			"/api/admin/editmess",
-			{
-				email: userDetail.email,
-				messAdvance: userDetail.advance,
-				dietPerDay: userDetail.daily,
-				manDay: userDetail.man,
-				specialLunch: userDetail.specials,
-			},
-			config
-		);
+		await axiosInstance.patch("/api/admin/editmess", {
+			email: userDetail.email,
+			messAdvance: userDetail.advance,
+			dietPerDay: userDetail.daily,
+			manDay: userDetail.man,
+			specialLunch: userDetail.specials,
+		});
 	};
 	return (
 		<>
