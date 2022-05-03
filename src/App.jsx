@@ -20,7 +20,11 @@ const App = () => {
 		<>
 			{location.pathname !== "/" &&
 				location.pathname !== "/login" &&
-				location.pathname !== "/register" && <Header />}
+				location.pathname !== "/register" && (
+					<PrivateRoute>
+						<Header />
+					</PrivateRoute>
+				)}
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/login" element={<Login />} />

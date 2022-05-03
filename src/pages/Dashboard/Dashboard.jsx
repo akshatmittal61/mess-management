@@ -8,9 +8,10 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import UserDetails from "../../components/UserDetails/UserDetails";
+import GlobalContext from "../../Context/GlobalContext";
 
 const columns = [
-	{ id: "roll", label: "Roll No", minWidth: 50, format: (value) => +value },
+	{ id: "email", label: "Email", minWidth: 50, format: (value) => value },
 	{ id: "name", label: "Name", minWidth: 70 },
 	{
 		id: "advance",
@@ -56,13 +57,12 @@ const columns = [
 	},
 ];
 
-function createData(roll, name, daily, man, specials) {
-	const advance = 19270;
+function createData(email, name, advance, daily, man, specials) {
 	const balance = daily * man;
 	const grand = balance + specials;
 	const left = advance - grand;
 	return {
-		roll,
+		email,
 		name,
 		advance,
 		daily,
@@ -74,19 +74,56 @@ function createData(roll, name, daily, man, specials) {
 	};
 }
 
-export default function Dashboard() {
+const Dashboard = () => {
+	const { axiosInstance } = React.useContext(GlobalContext);
 	const [page, setPage] = React.useState(0);
 	const [rowsPerPage, setRowsPerPage] = React.useState(10);
-	const [rows, setRows] = React.useState([
-		createData(20107, "Akshat Mittal", 140, 20, 70),
-		createData(20106, "Akshat Khosya", 140, 18, 70),
-	]);
+	const [rows, setRows] = React.useState([]);
+	const getPersonDetails = async (email, config) => {
+		const personDetails = await axiosInstance.post(
+			"/api/admin/profile",
+			{
+				email: email,
+			},
+			config
+		);
+		return personDetails;
+	};
 	React.useEffect(() => {
-		setRows([
-			...rows,
-			createData(20154, "Saurabh", 140, 15, 80),
-			createData(20138, "Mitali", 140, 18, 70),
-		]);
+		setRows([]);
+		const getAllData = async () => {
+			const config = {
+				headers: {
+					"x-auth-token": localStorage.getItem("token"),
+				},
+			};
+			const response = await axiosInstance.get(
+				"/api/admin/getMessDetails",
+				config
+			);
+			const { details } = response.data.errors[0];
+			details.forEach((person) => {
+				getPersonDetails(person.email, config)
+					.then((res) => {
+						return res.data;
+					})
+					.then((data) => {
+						const personDetails = data.errors[0];
+						setRows([
+							...rows,
+							createData(
+								person.email,
+								personDetails.details.name,
+								person.messAdvance,
+								person.dietPerDay,
+								person.manDay,
+								person.specialLunch
+							),
+						]);
+					});
+			});
+		};
+		getAllData();
 	}, []);
 
 	const handleChangePage = (event, newPage) => {
@@ -173,4 +210,5 @@ export default function Dashboard() {
 			)}
 		</Paper>
 	);
-}
+};
+export default Dashboard;

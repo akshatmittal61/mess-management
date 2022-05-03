@@ -39,7 +39,13 @@ export default function Login() {
 			console.log(response);
 			localStorage.setItem("token", token);
 			localStorage.setItem("isAuthenticated", true);
-			localStorage.setItem("user", JSON.stringify(useData));
+			localStorage.setItem(
+				"user",
+				JSON.stringify({
+					...useData,
+					isAdmin: useData.role === "admin",
+				})
+			);
 			setUser({
 				...useData,
 				isAdmin: useData.role === "admin",
