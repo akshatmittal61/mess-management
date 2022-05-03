@@ -16,14 +16,14 @@ const Header = () => {
 			link: "/dashboard",
 		},
 		{
-			text: "Account",
-			link: "/account",
+			text: "Logout",
+			link: "/logout",
 		},
 	];
 	const settings = [
 		{
-			text: "Account",
-			link: "/account",
+			text: "Dashboard",
+			link: "/dashboard",
 		},
 		{
 			text: "Logout",
@@ -172,15 +172,13 @@ const Header = () => {
 							{settings.map((setting, index) => (
 								<MenuItem
 									key={index}
-									onClick={handleCloseUserMenu}
+									onClick={() => {
+										navigate(setting.link);
+										handleCloseUserMenu();
+									}}
 								>
-									<Typography
-										textAlign="center"
-										onClick={() => navigate(setting.link)}
-									>
-										{/* <Link to={setting.link}> */}
+									<Typography textAlign="center">
 										{setting.text}
-										{/* </Link> */}
 									</Typography>
 								</MenuItem>
 							))}
