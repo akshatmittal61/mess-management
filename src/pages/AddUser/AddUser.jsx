@@ -42,15 +42,14 @@ const AddUser = ({ close }) => {
 				email: userDetail.email,
 				name: userDetail.name,
 			});
-			/* const response2 = await axiosInstance.post("/api/admin/newmess", {
+			const response2 = await axiosInstance.post("/api/admin/newmess", {
 				email: userDetail.email,
 				messAdvance: userDetail.advance,
 				dietPerDay: userDetail.daily,
 				manDay: userDetail.man,
 				specialLunch: userDetail.specials,
-			}); */
-			console.log(response1.data);
-			// console.log(response2.data);
+			}); 
+			handleClose();
 		} catch (error) {
 			console.log(error);
 		}
@@ -83,10 +82,7 @@ const AddUser = ({ close }) => {
 						<Button
 							autoFocus
 							color="inherit"
-							onClick={() => {
-								handleSubmit();
-								handleClose();
-							}}
+							onClick={handleSubmit}
 						>
 							save
 						</Button>

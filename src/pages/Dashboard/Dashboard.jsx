@@ -101,6 +101,7 @@ const Dashboard = () => {
 	const getAllData = async () => {
 		setIsLoading(true);
 		setRows([]);
+		console.log('hello');
 		const response = await axiosInstance.get("/api/admin/getMessDetails");
 		const { details } = response.data.errors[0];
 		details.forEach((person) => {
@@ -129,7 +130,7 @@ const Dashboard = () => {
 	};
 	React.useEffect(() => {
 		getAllData();
-	}, [openDetails]);
+	}, [openDetails,openAddUser]);
 
 	const handleChangePage = (event, newPage) => {
 		setPage(newPage);
