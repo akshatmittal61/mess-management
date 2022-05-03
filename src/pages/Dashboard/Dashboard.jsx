@@ -100,9 +100,9 @@ const Dashboard = () => {
 	};
 	const getAllData = async () => {
 		setIsLoading(true);
+		setRows([]);
 		const response = await axiosInstance.get("/api/admin/getMessDetails");
 		const { details } = response.data.errors[0];
-		setRows([]);
 		details.forEach((person) => {
 			getPersonDetails(person.email)
 				.then((res) => {
@@ -110,17 +110,19 @@ const Dashboard = () => {
 				})
 				.then((data) => {
 					const personDetails = data.errors[0];
-					setRows([
-						...rows,
-						createData(
-							person.email,
-							personDetails.details.name,
-							person.messAdvance,
-							person.dietPerDay,
-							person.manDay,
-							person.specialLunch
-						),
-					]);
+					setRows((prev) => {
+						return [
+							...prev,
+							createData(
+								person.email,
+								personDetails.details.name,
+								person.messAdvance,
+								person.dietPerDay,
+								person.manDay,
+								person.specialLunch
+							),
+						];
+					});
 				});
 		});
 		setIsLoading(false);

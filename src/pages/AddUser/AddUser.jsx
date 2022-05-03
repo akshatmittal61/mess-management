@@ -30,13 +30,30 @@ const AddUser = ({ close }) => {
 	};
 	const handleSubmit = async () => {
 		console.log(userDetail);
-		await axiosInstance.patch("/api/admin/editmess", {
+		/* await axiosInstance.patch("/api/admin/editmess", {
 			email: userDetail.email,
 			messAdvance: userDetail.advance,
 			dietPerDay: userDetail.daily,
 			manDay: userDetail.man,
 			specialLunch: userDetail.specials,
-		});
+		}); */
+		try {
+			const response1 = await axiosInstance.post("/api/admin/newuser", {
+				email: userDetail.email,
+				name: userDetail.name,
+			});
+			/* const response2 = await axiosInstance.post("/api/admin/newmess", {
+				email: userDetail.email,
+				messAdvance: userDetail.advance,
+				dietPerDay: userDetail.daily,
+				manDay: userDetail.man,
+				specialLunch: userDetail.specials,
+			}); */
+			console.log(response1.data);
+			// console.log(response2.data);
+		} catch (error) {
+			console.log(error);
+		}
 	};
 	return (
 		<>

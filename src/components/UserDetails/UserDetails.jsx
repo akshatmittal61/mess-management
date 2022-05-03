@@ -45,6 +45,7 @@ const UserDetails = ({ activeUser, close }) => {
 			dietPerDay: userDetail.daily,
 			manDay: userDetail.man,
 			specialLunch: userDetail.specials,
+			name: userDetail.name
 		});
 	};
 	return (
@@ -135,7 +136,7 @@ const UserDetails = ({ activeUser, close }) => {
 									<Box component="form">
 										<Typography>Email: </Typography>
 										<Input
-											disabled={!allowEdit}
+											disabled={true}
 											name="email"
 											value={userDetail.email}
 											onChange={handleChange}

@@ -10,7 +10,8 @@ exports.newUser = async (req, res) => {
         .json({ errors: [{ message: "User already Exits" }] });
     }
     const newUser = Auth(req.body);
-    const results = newUser.save();
+    const results = await newUser.save();
+    console.log(results);
     if (results) {
       return res.status(200).json({ errors: [{ message: "User created " }] });
     }
@@ -29,7 +30,7 @@ exports.newMess = async (req, res) => {
         .json({ errors: [{ message: "User Mess details already Exits" }] });
     } else {
       const newMessDetails = new Mess(req.body);
-      const results = newMessDetails.save();
+      const results = await newMessDetails.save();
       if (results) {
         return res
           .status(200)
@@ -46,7 +47,7 @@ exports.editMess = async (req, res) => {
   try {
     const { email,name, ...others } = req.body;
     console.log(others);
-    const newName=await Mess.updateOne({email:req.body.email},{name:name});
+    const newName=await Auth.updateOne({email:req.body.email},{name:name});
     const result = await Mess.updateOne(
       { email: req.body.email },
       { $set: others }
