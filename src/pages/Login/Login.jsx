@@ -1,8 +1,14 @@
 import * as React from "react";
-import { Avatar, Button, CssBaseline, IconButton } from "@mui/material";
+import {
+	Avatar,
+	Button,
+	CssBaseline,
+	IconButton,
+	Snackbar,
+} from "@mui/material";
 import { TextField, Grid, Box, Typography, Container } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { ArrowBack, Lock } from "@mui/icons-material";
+import { ArrowBack, Close, Lock } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import GlobalContext from "../../Context/GlobalContext";
 
@@ -17,6 +23,14 @@ export default function Login() {
 		setUser,
 		axiosInstance,
 	} = React.useContext(GlobalContext);
+	const [open, setOpen] = React.useState(false);
+	const [snackMessage, setSnackMessage] = React.useState("");
+	const handleClose = (event, reason) => {
+		if (reason === "clickaway") {
+			return;
+		}
+		setOpen(false);
+	};
 	const [loginUser, setLoginUser] = React.useState({
 		email: "",
 		password: "",
@@ -52,11 +66,11 @@ export default function Login() {
 			setIsAuthenticated(true);
 		} catch (error) {
 			const { status, data } = error.response;
-			if (status === 401) {
-				alert(data.errors[0].message);
-			} else if (status === 500) {
-				alert(data.errors[0].message);
-			}
+			setSnackMessage(data.errors[0].message);
+			setOpen(true);
+			setTimeout(() => {
+				setOpen(false);
+			}, 5000);
 		}
 	};
 	React.useEffect(() => {
@@ -141,6 +155,22 @@ export default function Login() {
 					</Box>
 				</Box>
 			</Container>
+			<Snackbar
+				open={open}
+				autoHideDuration={6000}
+				onClose={handleClose}
+				message={snackMessage}
+				action={
+					<IconButton
+						size="small"
+						aria-label="close"
+						color="inherit"
+						onClick={handleClose}
+					>
+						<Close fontSize="small" />
+					</IconButton>
+				}
+			/>
 		</ThemeProvider>
 	);
 }
