@@ -3,37 +3,35 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const path = require("path");
 
 const app = express();
 
 dotenv.config();
 const corsOptions = {
-  origin: "*",
-  credentials: true,
-  optionSuccessStatus: 200,
+	origin: "*",
+	credentials: true,
+	optionSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
+	bodyParser.urlencoded({
+		extended: true,
+	})
 );
 
-app.get("/", (req, res) => {
-  res.send("Mess management");
-});
 // MongoDb connection
 mongoose.connect(
-  process.env.MONGO_URL,
-  { useNewUrlParser: true, useUnifiedTopology: true },
-  function (err) {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log("Database Connected");
-    }
-  }
+	process.env.MONGO_URL,
+	{ useNewUrlParser: true, useUnifiedTopology: true },
+	function (err) {
+		if (err) {
+			console.log(err);
+		} else {
+			console.log("Database Connected");
+		}
+	}
 );
 
 // // routes
@@ -44,6 +42,13 @@ const admin = require("./routes/admin");
 app.use("/api/admin", admin);
 app.use("/api/auth", auth);
 
+// if (process.env.NODE_ENV === "production") {
+	app.use(express.static("build"));
+	app.get("*", (req, res) => {
+		res.sendFile(path.resolve(__dirname, "build", "index.html"));
+	});
+// }
+
 app.listen(4000, () => {
-  console.log("Server started at port " +  4000);
+	console.log("Server started at port " + 4000);
 });

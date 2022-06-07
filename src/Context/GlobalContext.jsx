@@ -13,7 +13,7 @@ export const GlobalProvider = ({ children }) => {
 		JSON.parse(localStorage.getItem("user")) || null
 	);
 	const axiosInstance = axios.create({
-		baseURL: "http://localhost:4000/",
+		baseURL: "/",
 		headers: {
 			"x-auth-token": localStorage.getItem("token"),
 			"Content-Type": "application/json",

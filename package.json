@@ -36,6 +36,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "nodemon server.js",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run build",
     "sass": "sass src/style.scss:src/style.css src/pages/Home/home.scss:src/pages/Home/home.css src/pages/Login/login.scss:src/pages/Login/login.css -w"
   },
   "eslintConfig": {
