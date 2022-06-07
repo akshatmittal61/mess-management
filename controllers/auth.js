@@ -14,7 +14,7 @@ exports.register = async (req, res) => {
           errors: [{ message: "User already registred" }],
         });
       } else {
-        if(checkUser.password.length()!=0){
+        if(checkUser.password){
           return res.status(409).json({
             errors: [{ message: "User already registred" }],
           });

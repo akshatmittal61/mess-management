@@ -3,13 +3,21 @@ const Mess = require("../models/messDetails");
 
 exports.newUser = async (req, res) => {
   try {
+    console.log(req.body);
     const check = await Auth.findOne({ email: req.body.email });
     if (check) {
       return res
         .status(401)
         .json({ errors: [{ message: "User already Exits" }] });
     }
-    const newUser = Auth(req.body);
+    const userData={
+      email:req.body.email,
+      name:req.body.name,
+      emailVerification:false,
+      role:"user",
+
+    }
+    const newUser =new Auth(userData);
     const results = await newUser.save();
     console.log(results);
     if (results) {
